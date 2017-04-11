@@ -1,0 +1,86 @@
+var path = require('path');
+var webpack = require('webpack');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var url = require('url');
+
+module.exports = {
+    entry: {
+        index: './static/index.jsx',
+    },
+    output: {
+        path: path.resolve(__dirname, './public/dist'),
+        publicPath: '/dist/',
+        filename: '[name].js',
+    },
+    module: {
+        loaders: [{
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader',
+            query: {
+                cacheDirectory: false,
+                presets: ['es2015', 'react', 'stage-2'],
+                plugins: [
+                    'transform-object-rest-spread',
+                    [
+                        'import',
+                        {
+                            libraryName: 'antd',
+                            style: true,
+                        },
+                    ],
+                ],
+            },
+        }, {
+            test: /\.css$/,
+            loader: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: 'css-loader',
+            }),
+        }, {
+            test: /\.less$/,
+            loader: ExtractTextPlugin.extract({
+                use: 'css-loader?sourceMap!postcss-loader!less-loader?{"sourceMap":true}',
+            }),
+        },{
+            test: /\.(png|jpg|gif|svg)$/,
+            loader: 'url',
+            query: {
+                limit: 10000,
+                name: '[name].[ext]?[hash]',
+            },
+        },],
+    },
+    plugins: [
+        new ExtractTextPlugin({
+            filename: '[name].css',
+            disable: false,
+            allChunks: true,
+        }),
+        new webpack.DefinePlugin({
+            process: {
+                env: {
+                    NODE_ENV: JSON.stringify(
+                        process.env.NODE_ENV || 'development'
+                    ),
+                },
+            },
+        }),
+    ],
+    resolve: {
+        extensions: ['.js', '.css', '.jsx', 'less'],
+        modules: ['node_modules'],
+    },
+}
+
+if (process.env.NODE_ENV === 'production') {
+    module.exports.plugins = (module.exports.plugins || []).concat([
+        new webpack.optimize.UglifyJsPlugin({
+            test: /(\.jsx|\.js)$/,
+            compress: {
+                warnings: false,
+            },
+        }),
+    ]);
+    module.exports.devtool = 'source-map';
+}
