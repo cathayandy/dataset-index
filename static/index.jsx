@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { render } from 'react-dom';
 import fetch from 'isomorphic-fetch';
 import FormData from 'form-data';
-import { Layout, Input, Button, Row, Col } from 'antd';
+import { Layout, Input, Button, Row, Col, Checkbox } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 require('./index.css');
 
@@ -12,8 +12,13 @@ class App extends PureComponent {
         this.state = {
             validate: 'initial',
             value: '',
+            checked: false,
             button: 'disable',
         };
+    }
+    onCheck(e) {
+        const { checked } = e.target;
+        this.setState({ checked });
     }
     onInputChange(e) {
         const { value } = e.target;
@@ -85,7 +90,11 @@ class App extends PureComponent {
                 Send
             </Button>,
         };
-        return map[this.state.button];
+        if (!this.state.checked) {
+            return map.disable;
+        } else {
+            return map[this.state.button];
+        }
     }
     render() {
         const marginBottom = {
@@ -120,13 +129,16 @@ class App extends PureComponent {
                             Download
                         </h1>
                         <Row gutter={16}>
-                            <Col lg={9} sm={9} xs={24} style={marginBottom}>
+                            <Col lg={6} md={8} sm={12} xs={24} style={marginBottom}>
                                 <Input
                                     onChange={(e) => this.onInputChange(e)}
                                     placeholder="Input your email address to get the dataset download link."
                                 />
                             </Col>
-                            <Col lg={3} sm={3} xs={24} style={marginBottom}>
+                            <Col lg={6} md={8} sm={12} xs={24} style={marginBottom}>
+                                <Checkbox onChange={(e) => this.onCheck(e)}>I agree with the above note.</Checkbox>
+                            </Col>
+                            <Col lg={24} md={24} sm={24} xs={24} style={marginBottom}>
                                 { this.renderButton() }
                             </Col>
                         </Row>
