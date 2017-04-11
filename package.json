@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "build": "webpack --progress --colors --watch",
-    "watch": "webpack-dev-server --hot --progress --colors",
-    "dist": "NODE_ENV=production webpack --progress --colors"
+    "build": "$(npm bin)/webpack --progress --colors --watch",
+    "watch": "$(npm bin)/webpack-dev-server --hot --progress --colors",
+    "dist": "NODE_ENV=production $(npm bin)/webpack --progress --colors"
   },
   "author": "cathayandy",
   "license": "MIT",

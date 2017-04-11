@@ -11,6 +11,7 @@ Built using [Ant Design](https://ant.design) & [Koa.js](http://koajs.com/)
     git clone git@github.com:cathayandy/dataset-index.git
     cd dataset-index
     npm install
+    npm install webpack -g
     npm run dist
     echo "module.exports = {
         login: {
