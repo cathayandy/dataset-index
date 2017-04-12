@@ -1,13 +1,17 @@
 {
   "name": "dataset",
-  "version": "1.0.0",
-  "description": "A dataset website sample.",
+  "version": "1.1.0",
+  "description": "A dataset index page sample.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "dev": "node app.js",
+    "serve": "nohup node app.js > dataset-index.log &",
+    "start": "pm2 start app.js --name dataset-index -l dataset-index.log",
+    "stop": "pm2 delete dataset-index",
+    "restart": "pm2 restart dataset-index",
     "build": "$(npm bin)/webpack --progress --colors --watch",
-    "watch": "$(npm bin)/webpack-dev-server --hot --progress --colors",
-    "dist": "NODE_ENV=production $(npm bin)/webpack --progress --colors"
+    "dist": "NODE_ENV=production $(npm bin)/webpack --progress --colors",
+    "config": "node makecfg.js"
   },
   "author": "cathayandy",
   "license": "MIT",
@@ -20,8 +24,10 @@
     "koa-logger": "^2.0.1",
     "koa-mailer": "^0.1.0",
     "koa-static": "^3.0.0",
+    "prompt": "^1.0.0",
     "react": "^15.5.3",
-    "react-dom": "^15.5.3"
+    "react-dom": "^15.5.3",
+    "react-markdown-loader": "^1.1.10"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",

@@ -8,5 +8,6 @@
 
 # misc
 .DS_Store
-npm-debug.log*
+*.log
 config.js
+static/index.md

@@ -2,41 +2,115 @@ import React, { PureComponent } from 'react';
 import { render } from 'react-dom';
 import fetch from 'isomorphic-fetch';
 import FormData from 'form-data';
-import { Layout, Input, Button, Row, Col, Checkbox } from 'antd';
+import { Layout, Input, Button, Row, Col, Checkbox, Icon } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
-require('./index.css');
+import Statics from './index.md';
+import styles from './index.less';
 
 class App extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            validate: 'initial',
-            value: '',
+            emailValidate: 'initial',
+            email: '',
+            nameValidate: 'initial',
+            name: '',
+            institudeValidate: 'initial',
+            institude: '',
             checked: false,
             button: 'disable',
         };
     }
     onCheck(e) {
         const { checked } = e.target;
+        if (!checked) {
+            this.setState({
+                button: 'disable',
+            });
+        } else if (this.state.nameValidate === 'success' &&
+            this.state.institudeValidate === 'success' &&
+            this.state.emailValidate === 'success') {
+            this.setState({
+                button: 'normal',
+            });
+        }
         this.setState({ checked });
     }
-    onInputChange(e) {
+    onEmailInputChange(e) {
         const { value } = e.target;
         const reg = /^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$/;
-        if (!reg.test(value)) {
+        if (value === '') {
             this.setState({
-                validate: 'failure',
+                emailValidate: 'initial',
+                button: 'disable',
+            });
+        } else if (!reg.test(value)) {
+            this.setState({
+                emailValidate: 'failure',
                 button: 'disable',
             });
         } else {
             this.setState({
-                validate: 'success',
-                button: 'normal',
+                emailValidate: 'success',
             });
+            if (this.state.nameValidate === 'success' &&
+                this.state.institudeValidate === 'success' &&
+                this.state.checked) {
+                this.setState({
+                    button: 'normal',
+                });
+            }
         }
-        this.setState({ value });
+        this.setState({ email: value });
+    }
+    onNameInputChange(e) {
+        const { value } = e.target;
+        if (value === '') {
+            this.setState({
+                nameValidate: 'initial',
+                button: 'disable',
+            });
+        } else {
+            this.setState({
+                nameValidate: 'success',
+            });
+            if (this.state.emailValidate === 'success' &&
+                this.state.institudeValidate === 'success' &&
+                this.state.checked) {
+                this.setState({
+                    button: 'normal',
+                });
+            }
+        }
+        this.setState({ name: value });
+    }
+    onInstitudeInputChange(e) {
+        const { value } = e.target;
+        if (value === '') {
+            this.setState({
+                institudeValidate: 'initial',
+                button: 'disable',
+            });
+        } else {
+            this.setState({
+                institudeValidate: 'success',
+            });
+            if (this.state.emailValidate === 'success' &&
+                this.state.nameValidate === 'success' &&
+                this.state.checked) {
+                this.setState({
+                    button: 'normal',
+                });
+            }
+        }
+        this.setState({ institude: value });
     }
     onSend(e) {
+        if (!this.state.checked || this.state.emailValidate !== 'success' ||
+            this.state.nameValidate !== 'success' ||
+            this.state.institudeValidate !== 'success') {
+            return;
+        }
         this.setState({ button: 'loading' });
         fetch('/mail/request', {
             method: 'POST',
@@ -44,33 +118,75 @@ class App extends PureComponent {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                addr: this.state.value,
+                email: this.state.email,
+                name: this.state.name,
+                institude: this.state.institude,
             }),
         })
             .then((res) => res.status === 204 ?
                 this.setState({ button: 'success' }):
                 this.setState({ button: 'failure' }));
     }
-    renderInput() {
+    renderEmailInput() {
         const map = {
             initial: <Input
-                type="text"
-                onChange={(e) => this.onInputChange(e)}
-                placeholder="Input your email address to get the dataset download link."
+                prefix={<Icon type='mail' style={{ fontSize: 13 }} />}
+                type='text'
+                onChange={(e) => this.onEmailInputChange(e)}
+                placeholder='E-mail'
             />,
             success: <Input
-                type="text"
-                onChange={(e) => this.onInputChange(e)}
-                onPressEnter={this.onSend}
-                placeholder="Input your email address to get the dataset download link."
+                type='text'
+                prefix={<Icon type='mail' style={{ fontSize: 13 }} />}                
+                onChange={(e) => this.onEmailInputChange(e)}
+                className='input-success'
+                placeholder='E-mail'
             />,
             failure: <Input
-                type="text"
-                onChange={(e) => this.onInputChange(e)}
-                placeholder="Input your email address to get the dataset download link."
+                type='text'
+                prefix={<Icon type='mail' style={{ fontSize: 13 }} />}                
+                onChange={(e) => this.onEmailInputChange(e)}
+                className='input-error'
+                placeholder='E-mail'
             />,
         };
-        return map[this.state.button];
+        return map[this.state.emailValidate];
+    }
+    renderNameInput() {
+        const map = {
+            initial: <Input
+                prefix={<Icon type='user' style={{ fontSize: 13 }} />}
+                type='text'
+                onChange={(e) => this.onNameInputChange(e)}
+                placeholder='Name'
+            />,
+            success: <Input
+                type='text'
+                prefix={<Icon type='user' style={{ fontSize: 13 }} />}                
+                onChange={(e) => this.onNameInputChange(e)}
+                className='input-success'
+                placeholder='Name'
+            />,
+        };
+        return map[this.state.nameValidate];
+    }
+    renderInstitudeInput() {
+        const map = {
+            initial: <Input
+                prefix={<Icon type='home' style={{ fontSize: 13 }} />}
+                type='text'
+                onChange={(e) => this.onInstitudeInputChange(e)}
+                placeholder='Institude'
+            />,
+            success: <Input
+                type='text'
+                prefix={<Icon type='home' style={{ fontSize: 13 }} />}                
+                onChange={(e) => this.onInstitudeInputChange(e)}
+                className='input-success'
+                placeholder='Institude'
+            />,
+        };
+        return map[this.state.institudeValidate];
     }
     renderButton() {
         const map = {
@@ -83,18 +199,14 @@ class App extends PureComponent {
             loading: <Button icon='loading' loading>
                 Send
             </Button>,
-            success: <Button icon='check' onClick={(e) => this.onSend(e)}>
+            success: <Button icon='check' onClick={(e) => this.onSend(e)} className='btn-success'>
                 Send
             </Button>,
-            failure: <Button icon='close' onClick={(e) => this.onSend(e)}>
+            failure: <Button icon='close' onClick={(e) => this.onSend(e)} className='btn-error'>
                 Send
             </Button>,
         };
-        if (!this.state.checked) {
-            return map.disable;
-        } else {
-            return map[this.state.button];
-        }
+        return map[this.state.button];
     }
     render() {
         const marginBottom = {
@@ -108,34 +220,28 @@ class App extends PureComponent {
                     </div>
                 </Header>
                 <Content style={{ margin: '24px 16px 0' }}>
-                    <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                        <h1 style={marginBottom}>
-                            Description
-                        </h1>
-                        <div style={marginBottom}>
-                            This Agreement was last modified on February 10, 2014.<br/>
-                            Please read these Terms and Conditions ("Agreement", "Terms of Service") carefully before using leetcode.com ("the Site") operated by LeetCode ("us", "we", or "our"). This Agreement sets forth the legally binding terms and conditions for your use of the Site at leetcode.com.<br/>
-                            By accessing or using the Site in any manner, including, but not limited to, visiting or browsing the Site or contributing content or other materials to the Site, you agree to be bound by these Terms and Conditions. Capitalized terms are defined in this Agreement.<br/>
-                        </div>
-                        <h1 style={marginBottom}>
-                            Note
-                        </h1>
-                        <div style={marginBottom}>
-                            This Agreement was last modified on February 10, 2014.<br/>
-                            Please read these Terms and Conditions ("Agreement", "Terms of Service") carefully before using leetcode.com ("the Site") operated by LeetCode ("us", "we", or "our"). This Agreement sets forth the legally binding terms and conditions for your use of the Site at leetcode.com.<br/>
-                            By accessing or using the Site in any manner, including, but not limited to, visiting or browsing the Site or contributing content or other materials to the Site, you agree to be bound by these Terms and Conditions. Capitalized terms are defined in this Agreement.<br/>
-                        </div>
-                        <h1 style={marginBottom}>
+                    <div
+                        style={{ padding: 24, background: '#fff', minHeight: 360 }}
+                        className='main-container'
+                    >
+                        <Statics/>
+                        <h2 style={marginBottom}>
                             Download
-                        </h1>
+                        </h2>
+                        <p style={marginBottom}>
+                            Enter your personal information, and then we will send the download link to your e-mail.
+                        </p>
                         <Row gutter={16}>
-                            <Col lg={6} md={8} sm={12} xs={24} style={marginBottom}>
-                                <Input
-                                    onChange={(e) => this.onInputChange(e)}
-                                    placeholder="Input your email address to get the dataset download link."
-                                />
+                            <Col lg={8} md={8} sm={24} xs={24} style={marginBottom}>
+                                { this.renderNameInput() }
                             </Col>
-                            <Col lg={6} md={8} sm={12} xs={24} style={marginBottom}>
+                            <Col lg={8} md={8} sm={24} xs={24} style={marginBottom}>
+                                { this.renderInstitudeInput() }
+                            </Col>
+                            <Col lg={8} md={8} sm={24} xs={24} style={marginBottom}>
+                                { this.renderEmailInput() }
+                            </Col>
+                            <Col lg={24} md={24} sm={24} xs={24} style={marginBottom}>
                                 <Checkbox onChange={(e) => this.onCheck(e)}>I agree with the above note.</Checkbox>
                             </Col>
                             <Col lg={24} md={24} sm={24} xs={24} style={marginBottom}>

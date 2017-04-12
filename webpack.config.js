@@ -42,14 +42,25 @@ module.exports = {
             loader: ExtractTextPlugin.extract({
                 use: 'css-loader?sourceMap!postcss-loader!less-loader?{"sourceMap":true}',
             }),
-        },{
+        }, {
             test: /\.(png|jpg|gif|svg)$/,
-            loader: 'url',
+            loader: 'url-loader',
             query: {
                 limit: 10000,
                 name: '[name].[ext]?[hash]',
             },
-        },],
+        }, {
+            test: /\.md$/,
+            use: [{
+                loader: 'babel-loader',
+                query: {
+                    cacheDirectory: false,
+                    presets: ['es2015', 'react', 'stage-2'],
+                },
+            }, {
+                loader: 'react-markdown-loader',
+            }],
+        }],
     },
     plugins: [
         new ExtractTextPlugin({
@@ -68,7 +79,7 @@ module.exports = {
         }),
     ],
     resolve: {
-        extensions: ['.js', '.css', '.jsx', 'less'],
+        extensions: ['.js', '.css', '.jsx', 'less', '.md'],
         modules: ['node_modules'],
     },
 }

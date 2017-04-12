@@ -29,16 +29,20 @@ app.use(mailer({
     email: config.login,
     prefix: '/mail',
     validate: function (ctx) {
-        return emailRegExp.test(ctx.request.body.addr) &&
-            config.blacklist.indexOf(ctx.ip) < 0;
+        const { email, name, institude } = ctx.request.body;
+        return typeof email === 'string' && emailRegExp.test(email) &&
+            typeof name === 'string' && name !== '' &&
+            typeof institude === 'string' && institude !== '' &&
+            config.blacklist.indexOf(email) < 0;
     },
     handlers: {
         '/request': function (ctx) {
-            console.log(`${ctx.request.body.addr} requests the dataset.`);
+            const { email, name, institude } = ctx.request.body;
+            console.log(`${name}(${email}) from ${institude} requests the dataset.`);
             return {
-                to: ctx.request.body.addr,
-                subject: 'Dataset',
-                html: `Open this link to download the dataset: <br/>` +
+                to: email,
+                subject: 'XXX Dataset',
+                html: `Dear ${name}, open this link to download the dataset: <br/>` +
                     `<a href="${config.link}">${config.link}</a>`,
             };
         },
