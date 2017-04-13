@@ -1,6 +1,6 @@
 # Dataset Index
 
-Index page for [XXX Dataset](https://cathayandy.com). Built using [Ant Design](https://ant.design) & [Koa.js](http://koajs.com/).
+Index page for [a specific dataset](http://cathayandy.com:8000). Built using [Ant Design](https://ant.design) & [Koa.js](http://koajs.com/).
 
 ## Prerequisite
 
@@ -50,15 +50,22 @@ The `config.js` file looks like this:
     module.exports = {
         login: {
             host: 'smtp.yourserver.com',
-            port: 25,
-            secure: false,
+            port: 25, // 465, 587
+            secure: false, // true for 465, false for others
             auth: {
-                user: 'username@yoursever.com',
+                user: 'username', // may have @yourserver.com suffix or not
                 pass: 'password',
             },
         },
         blacklist: [],
+        template: function({ name, institude, link }) {
+            return (
+    `Dear ${name}, open this <a href="${link}">link</a> to download the dataset.`
+            );
+        },
+        title: 'XXX Dataset',
         link: 'http://your.dataset.link',
+        ip: '127.0.0.1',
         port: 80,
     };
 
@@ -102,6 +109,9 @@ You need to re-build the app to use the new `index.md` file. You don't need to r
 
     To stop it, just kill the process. (e.g. use `ps aux | grep node` to find the `pid`, and then use `kill -9 pid` to kill the process)
 
+## Deploy Static Resource
+
+You can deploy the static resource independently by copying the `public` directory to your static resource server(e.g. [Github Pages](https://pages.github.com/)).
 
 ## Lisence
 

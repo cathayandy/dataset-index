@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
 import { render } from 'react-dom';
 import fetch from 'isomorphic-fetch';
-import FormData from 'form-data';
 import { Layout, Input, Button, Row, Col, Checkbox, Icon } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
+import DocumentMeta from 'react-document-meta';
 import Statics from './index.md';
 import styles from './index.less';
+const { title, ip, port } = require('../config.js');
 
 class App extends PureComponent {
     constructor(props) {
@@ -112,8 +113,9 @@ class App extends PureComponent {
             return;
         }
         this.setState({ button: 'loading' });
-        fetch('/mail/request', {
+        fetch(`http://${ip}:${port}/mail/request`, {
             method: 'POST',
+            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -214,9 +216,10 @@ class App extends PureComponent {
         };
         return (
             <Layout>
+                <DocumentMeta title={title}/>
                 <Header style={{ background: '#fff', padding: 0 }}>
                     <div style={{ height: '100%', marginLeft: 24 }}>
-                        <h1>XXX Dataset</h1>
+                        <h1>{title}</h1>
                     </div>
                 </Header>
                 <Content style={{ margin: '24px 16px 0' }}>

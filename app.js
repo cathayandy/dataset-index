@@ -1,4 +1,5 @@
 const Koa = require('koa');
+const cors = require('kcors');
 const serve = require('koa-static');
 const logger = require('koa-logger');
 const mailer = require('koa-mailer');
@@ -7,14 +8,17 @@ const config = require('./config.js');
 const emailRegExp = /^[\w.\-]+@(?:[a-z0-9]+(?:-[a-z0-9]+)*\.)+[a-z]{2,3}$/;
 const app = new Koa();
 
-
 // x-response-time
 app.use(async function (ctx, next) {
     const start = new Date();
+    console.log(start);
     await next();
     const ms = new Date() - start;
     ctx.set('X-Response-Time', `${ms}ms`);
 });
+
+// cors
+app.use(cors());
 
 // bodyParser
 app.use(bodyParser({
@@ -38,12 +42,12 @@ app.use(mailer({
     handlers: {
         '/request': function (ctx) {
             const { email, name, institude } = ctx.request.body;
+            const link = config.link;
             console.log(`${name}(${email}) from ${institude} requests the dataset.`);
             return {
                 to: email,
-                subject: 'XXX Dataset',
-                html: `Dear ${name}, open this link to download the dataset: <br/>` +
-                    `<a href="${config.link}">${config.link}</a>`,
+                subject: config.title,
+                html: config.template({ name, institude, link }),
             };
         },
     },
