@@ -73,6 +73,11 @@ You need to re-run the app to use the new `config.js` file when there's a runnin
 
 The `index.md` file looks like this:
 
+    ---
+    imports:
+    Download: './download.jsx'
+    ---
+
     ## Description
 
     Just a simple `.md` file.
@@ -80,6 +85,20 @@ The `index.md` file looks like this:
     ## Note
 
     Edit it, re-build the app and see the change.
+
+    Aha! It changes!
+
+    ## Download
+
+    Enter your personal information, and then we will send the download link to your e-mail.
+
+    ```render html
+    <Download />
+    ```
+
+    ## Another Section
+
+    Under the Download Section
 
 You need to re-build the app to use the new `index.md` file. You don't need to re-run the app.
 

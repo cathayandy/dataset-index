@@ -42,11 +42,11 @@ app.use(mailer({
     handlers: {
         '/request': function (ctx) {
             const { email, name, institude } = ctx.request.body;
-            const link = config.link;
+            const { link, title } = config;
             console.log(`${name}(${email}) from ${institude} requests the dataset.`);
             return {
                 to: email,
-                subject: config.title,
+                subject: title,
                 html: config.template({ name, institude, link }),
             };
         },

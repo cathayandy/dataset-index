@@ -23,13 +23,32 @@ const template = (result) =>
     port: ${result.port},
 };`;
 const md =
-`## Description
+`---
+imports:
+  Download: './download.jsx'
+---
+
+## Description
 
 Just a simple \`.md\` file.
 
 ## Note
 
-Edit it, re-build the app and see the change.`;
+Edit it, re-build the app and see the change.
+
+Aha! It changes!
+
+## Download
+
+Enter your personal information, and then we will send the download link to your e-mail.
+
+\`\`\`render html
+<Download />
+\`\`\`
+
+## Another Section
+
+Under the Download Section`;
 
 console.log('Warning! This script will override config.js & static/index.md');
 prompt.message = '> ';
