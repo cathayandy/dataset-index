@@ -75,7 +75,7 @@ The `index.md` file looks like this:
 
     ---
     imports:
-    Download: './download.jsx'
+      Download: './download.jsx'
     ---
 
     ## Description
