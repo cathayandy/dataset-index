@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { render } from 'react-dom';
 import fetch from 'isomorphic-fetch';
 import { Input, Button, Row, Col, Checkbox, Icon } from 'antd';
-const { ip, port } = require('../config.js');
+const { ip, port } = config;
 
 export default class Download extends PureComponent {
     constructor(props) {

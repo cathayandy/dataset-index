@@ -5,7 +5,7 @@ const { Header, Content, Footer } = Layout;
 import DocumentMeta from 'react-document-meta';
 import Statics from './index.md';
 import styles from './index.less';
-const { title } = require('../config.js');
+const { title } = config;
 
 class App extends PureComponent {
     render() {

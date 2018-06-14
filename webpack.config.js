@@ -2,6 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var url = require('url');
+var config = require('./config.js');
 
 module.exports = {
     entry: {
@@ -76,6 +77,11 @@ module.exports = {
                     ),
                 },
             },
+            config: {
+                ip: JSON.stringify(config.ip),
+                port: JSON.stringify(config.port),
+                title: JSON.stringify(config.title),
+            }
         }),
     ],
     resolve: {
