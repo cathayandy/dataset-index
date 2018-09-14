@@ -1,6 +1,6 @@
 # Dataset Index
 
-Index page for [a specific dataset](http://cathayandy.com:8000). Built using [Ant Design](https://ant.design) & [Koa.js](http://koajs.com/).
+Index page for [a specific dataset](http://www.cs.cmu.edu/~glai1/data/race/). Built using [Ant Design](https://ant.design) & [Koa.js](http://koajs.com/).
 
 ## Prerequisite
 
